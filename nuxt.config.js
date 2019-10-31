@@ -1,3 +1,4 @@
+import axios from 'axios'
 
 export default {
   mode: 'spa',
@@ -58,6 +59,21 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+    }
+  },
+  generate: {
+    routes () {
+      return axios.get('https://mcmstest.microcms.io/api/v1/test', {
+        headers: { 'X-API-KEY': 'a8b319a1-39ab-45e9-b184-b797538a384a' }
+      })
+        .then((res) => {
+          return res.data.contents.map((friends) => {
+            return {
+              route: friends.dir,
+              payload: friends
+            }
+          })
+        })
     }
   }
 }

@@ -1,23 +1,7 @@
 <template>
   <div class="container">
     <div class="links">
-      <nuxt-link to="/Chiba">チバニャン</nuxt-link>
-      <nuxt-link to="/Hamagishi">ハマギシマン</nuxt-link>
-      <nuxt-link to="/Shimizu">清水パイセン</nuxt-link>
-      <nuxt-link to="/Dodo">DoDoさん</nuxt-link>
-      <nuxt-link to="/Hashimoto">ハシモトサン</nuxt-link>
-    </div>
-    <div class="card">
-      <h1 class="title">
-        {{ title }}
-      </h1>
-      <div class="mainv">
-        <img :src="mainv.url" alt="メイン画像">
-      </div>
-      <div class="contents">
-        <h2>プロフィール</h2>
-        <span v-html="body" />
-      </div>
+      <nuxt-link v-for="friend of friends" :key="friend.id" :to="friend.dir">{{ friend.title }}</nuxt-link>
     </div>
   </div>
 </template>
@@ -26,21 +10,21 @@
 import axios from 'axios'
 
 export default {
-  data () {
-    return {
-      title: '',
-      mainv: '',
-      body: ''
-    }
+  computed: {
+    ApiFlag () { return this.$store.state.friends.ApiFlag },
+    friends () { return this.$store.state.friends.friend }
   },
-  async asyncData () {
-    const { data } = await axios.get('https://mcmstest.microcms.io/api/v1/test', {
-      headers: { 'X-API-KEY': 'a8b319a1-39ab-45e9-b184-b797538a384a' }
-    })
-    return {
-      title: data.contents[1].title,
-      mainv: data.contents[1].mainv,
-      body: data.contents[1].body
+  mounted () {
+    // 一度も取得していなければAPI通信
+    if (this.ApiFlag === false) {
+      axios.get('https://mcmstest.microcms.io/api/v1/test', {
+        headers: { 'X-API-KEY': 'a8b319a1-39ab-45e9-b184-b797538a384a' }
+      })
+        .then((res) => {
+          console.log(res.data.contents)
+          this.$store.commit('friends/FlagChange')
+          this.$store.commit('friends/getFriends', res.data.contents)
+        })
     }
   }
 }
