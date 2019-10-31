@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="links">
-      <nuxt-link v-for="friend of friends" :key="friend.id" :to="friend.dir">{{ friend.title }}</nuxt-link>
+      <nuxt-link v-for="friend of friends" :key="friend.id" :to="`../${friend.dir}`">{{ friend.title }}</nuxt-link>
     </div>
   </div>
 </template>
