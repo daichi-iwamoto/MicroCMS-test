@@ -4,26 +4,23 @@
       <option hidden>おともだち を えらぼう！</option>
       <option v-for="friend of friends" :key="friend.id" :value="`../${friend.dir}`">{{ friend.title }}</option>
     </select>
-    <input type="checkbox" id="toggle" hidden>
-    <label class="cardlabel" for="toggle">
-      <div class="card">
-        <div class="Bcard">
-          <img src="~/assets/yumaruou.jpg" alt="遊〇王">
+    <div class="card" @click="open=!open" :class="{active:open}">
+      <div class="Bcard">
+        <img src="~/assets/yumaruou.jpg" alt="遊〇王">
+      </div>
+      <div class="Fcard">
+        <h1 class="title">
+          {{ title }}
+        </h1>
+        <div class="mainv">
+          <img :src="mainv.url" alt="メイン画像">
         </div>
-        <div class="Fcard">
-          <h1 class="title">
-            {{ title }}
-          </h1>
-          <div class="mainv">
-            <img :src="mainv.url" alt="メイン画像">
-          </div>
-          <div class="contents">
-            <h2>プロフィール</h2>
-            <span v-html="body" />
-          </div>
+        <div class="contents">
+          <h2>プロフィール</h2>
+          <span v-html="body" />
         </div>
       </div>
-    </label>
+    </div>
   </div>
 </template>
 
@@ -35,7 +32,8 @@ export default {
     return {
       title: '',
       mainv: '',
-      body: ''
+      body: '',
+      open: false
     }
   },
   computed: {
@@ -108,6 +106,7 @@ export default {
 </script>
 
 <style lang="scss">
+$Cwidth: 400px;
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -119,6 +118,7 @@ export default {
   flex-wrap: wrap;
   width: 400px;
   transform-style: preserve-3d;
+  transform:translate3d(0,0,0);
   perspective: 800px;
   .links{
     width: 250px;
@@ -133,10 +133,12 @@ export default {
   .card{
     position: relative;
     background: #2d3436;
-    width: 400px;
+    width: $Cwidth;
+    height: calc(#{$Cwidth} * 1.58928571429);
     border-radius: 10px;
     box-shadow: 0px 3px 10px rgba(0,0,0,0.5);
     transform: rotateY(180deg);
+    transition-duration: 1s;
     .Bcard{
       img{
         border-radius: 8px;
@@ -149,6 +151,8 @@ export default {
         justify-content: center;
         align-items: center;
         font-size: 72px;
+        transition-delay: 300ms;
+        transform: rotateY(180deg);
       }
       border-radius: 10px;
     }
@@ -156,6 +160,7 @@ export default {
       border-radius: 8px;
       padding: 15px;
       background: #2d3436;
+      height: 100%;
       .title{
         width: 100%;
         height: 60px;
@@ -165,10 +170,13 @@ export default {
       }
       .mainv{
         width: 100%;
-      }
-      img{
-        width: 100%;
-        border-radius: 10px;
+        height: 40%;
+        img{
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 10px;
+        }
       }
       .contents{
         width: 100%;
@@ -186,37 +194,16 @@ export default {
       }
     }
   }
-  #toggle:checked+.cardlabel{
-    .card{
-      animation-name: open;
-      animation-duration: 1s;
-      animation-fill-mode: forwards;
-      animation-delay: 500ms;
-      .Bcard{
-        img{
-          animation-name: upindex;
-          animation-duration: 1s;
-          animation-fill-mode: forwards;
-          animation-delay: 500ms;
-        }
+  .card.active{
+    transform: rotateY(0deg);
+    .Fcard{
+      z-index: 0;
+    }
+    .Bcard{
+      img{
+        opacity: 0;
       }
     }
-  }
-}
-@keyframes open {
-  0%{
-    transform: rotateY(180deg);
-  }
-  100%{
-    transform: rotateY(0deg);
-  }
-}
-@keyframes upindex {
-  0%{
-    z-index: 0;
-  }
-  100%{
-    z-index: -1;
   }
 }
 </style>
