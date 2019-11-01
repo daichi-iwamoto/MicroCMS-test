@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <div class="links">
-      <nuxt-link v-for="friend of friends" :key="friend.id" :to="`../${friend.dir}`">{{ friend.title }}</nuxt-link>
-    </div>
+    <select class="links" @change="jump">
+      <option hidden>おともだち を えらぼう！</option>
+      <option v-for="friend of friends" :key="friend.id" :value="friend.dir">{{ friend.title }}</option>
+    </select>
   </div>
 </template>
 
@@ -26,6 +27,11 @@ export default {
           this.$store.commit('friends/getFriends', res.data.contents)
         })
     }
+  },
+  methods: {
+    jump (e) {
+      location.href = e.target.value
+    }
   }
 }
 </script>
@@ -43,56 +49,13 @@ export default {
   width: 400px;
 }
 .links{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.links a{
-    width: 130px;
-    height: 35px;
-    background: #dfe6e9;
-    color: #2d3436;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    margin: 10px;
-    border-radius: 5px;
-}
-.card{
-  background: #2d3436;
-  width: 400px;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0px 3px 10px rgba(0,0,0,0.5);
-}
-.title{
-  width: 100%;
-  height: 60px;
+  width: 250px;
+  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.mainv{
-  width: 100%;
-}
-img{
-  width: 100%;
-  border-radius: 10px;
-}
-.contents{
-  width: 100%;
-  margin: 20px 0 10px;
-  border: solid 1px #dfe6e9;
-  border-radius: 5px;
-}
-.contents h2{
   background: #dfe6e9;
   color: #2d3436;
-  padding: 5px 0;
-}
-.contents p{
-  padding: 20px 0;
+  border-radius: 5px;
 }
 </style>

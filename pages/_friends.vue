@@ -1,20 +1,29 @@
 <template>
   <div class="container">
-    <div class="links">
-      <nuxt-link v-for="friend of friends" :key="friend.id" :to="friend.dir">{{ friend.title }}</nuxt-link>
-    </div>
-    <div class="card">
-      <h1 class="title">
-        {{ title }}
-      </h1>
-      <div class="mainv">
-        <img :src="mainv.url" alt="メイン画像">
+    <select class="links" @change="jump">
+      <option hidden>おともだち を えらぼう！</option>
+      <option v-for="friend of friends" :key="friend.id" :value="`../${friend.dir}`">{{ friend.title }}</option>
+    </select>
+    <input type="checkbox" id="toggle" hidden>
+    <label class="cardlabel" for="toggle">
+      <div class="card">
+        <div class="Bcard">
+          <img src="~/assets/yumaruou.jpg" alt="遊〇王">
+        </div>
+        <div class="Fcard">
+          <h1 class="title">
+            {{ title }}
+          </h1>
+          <div class="mainv">
+            <img :src="mainv.url" alt="メイン画像">
+          </div>
+          <div class="contents">
+            <h2>プロフィール</h2>
+            <span v-html="body" />
+          </div>
+        </div>
       </div>
-      <div class="contents">
-        <h2>プロフィール</h2>
-        <span v-html="body" />
-      </div>
-    </div>
+    </label>
   </div>
 </template>
 
@@ -89,11 +98,16 @@ export default {
         body: Fbody
       }
     }
+  },
+  methods: {
+    jump (e) {
+      location.href = e.target.value
+    }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -104,58 +118,105 @@ export default {
   color: #dfe6e9;
   flex-wrap: wrap;
   width: 400px;
-}
-.links{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.links a{
-    width: 130px;
+  transform-style: preserve-3d;
+  perspective: 800px;
+  .links{
+    width: 250px;
     height: 35px;
-    background: #dfe6e9;
-    color: #2d3436;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
-    margin: 10px;
+    background: #dfe6e9;
+    color: #2d3436;
     border-radius: 5px;
+  }
+  .card{
+    position: relative;
+    background: #2d3436;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.5);
+    transform: rotateY(180deg);
+    .Bcard{
+      img{
+        border-radius: 8px;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 72px;
+      }
+      border-radius: 10px;
+    }
+    .Fcard{
+      border-radius: 8px;
+      padding: 15px;
+      background: #2d3436;
+      .title{
+        width: 100%;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .mainv{
+        width: 100%;
+      }
+      img{
+        width: 100%;
+        border-radius: 10px;
+      }
+      .contents{
+        width: 100%;
+        margin: 20px 0 10px;
+        border: solid 1px #dfe6e9;
+        border-radius: 5px;
+        h2{
+          background: #dfe6e9;
+          color: #2d3436;
+          padding: 5px 0;
+        }
+        p{
+          padding: 20px 0;
+        }
+      }
+    }
+  }
+  #toggle:checked+.cardlabel{
+    .card{
+      animation-name: open;
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+      animation-delay: 500ms;
+      .Bcard{
+        img{
+          animation-name: upindex;
+          animation-duration: 1s;
+          animation-fill-mode: forwards;
+          animation-delay: 500ms;
+        }
+      }
+    }
+  }
 }
-.card{
-  background: #2d3436;
-  width: 400px;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0px 3px 10px rgba(0,0,0,0.5);
+@keyframes open {
+  0%{
+    transform: rotateY(180deg);
+  }
+  100%{
+    transform: rotateY(0deg);
+  }
 }
-.title{
-  width: 100%;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.mainv{
-  width: 100%;
-}
-img{
-  width: 100%;
-  border-radius: 10px;
-}
-.contents{
-  width: 100%;
-  margin: 20px 0 10px;
-  border: solid 1px #dfe6e9;
-  border-radius: 5px;
-}
-.contents h2{
-  background: #dfe6e9;
-  color: #2d3436;
-  padding: 5px 0;
-}
-.contents p{
-  padding: 20px 0;
+@keyframes upindex {
+  0%{
+    z-index: 0;
+  }
+  100%{
+    z-index: -1;
+  }
 }
 </style>
